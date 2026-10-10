@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life Insurance Solution Desk</title>
+<style>
+:root{--navy:#0b1f44;--navy2:#16336b;--gold:#c9a24b;--bg:#f3f5fa;--card:#fff;--ink:#14213d;--mute:#5c6b88;--line:#dde3ef;--green:#16803c;--greenbg:#e7f6ec;--amber:#b36b00;--amberbg:#fff3dc;--red:#b3261e;--redbg:#fdeceb}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:26px 16px;text-align:center;border-bottom:4px solid var(--gold)}
+header h1{margin:0;font-size:clamp(1.3rem,4vw,2rem);letter-spacing:.08em}
+header .sub{color:var(--gold);font-weight:600;letter-spacing:.12em;margin-top:4px}
+header .tag{font-size:.8rem;opacity:.85;margin-top:6px}
+main{max-width:1150px;margin:18px auto;padding:0 14px;display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:16px;box-shadow:0 4px 16px rgba(11,31,68,.08);padding:18px;margin-bottom:16px;border:1px solid var(--line)}
+.card h2{margin:0 0 12px;font-size:.95rem;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);border-bottom:2px solid var(--gold);padding-bottom:6px}
+label{display:block;font-weight:600;font-size:.85rem;margin:12px 0 4px}
+input[type=text],input[type=date],input[type=number],select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:1rem;background:#fff;color:var(--ink)}
+input:focus,select:focus{outline:none;border-color:var(--navy2);box-shadow:0 0 0 3px rgba(22,51,107,.12)}
+.hint{font-size:.78rem;color:var(--mute);margin-top:3px}
+.err{font-size:.8rem;color:var(--red);margin-top:3px}
+.cards2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.occ{border:2px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;background:#fff;position:relative;transition:.2s;font-weight:600;font-size:.88rem}
+.occ svg{width:34px;height:34px;stroke:var(--navy2);fill:none;stroke-width:1.6;display:block;margin:0 auto 6px}
+.occ.active{border-color:var(--navy2);background:#eef2fb;box-shadow:0 2px 10px rgba(22,51,107,.18)}
+.occ.active::after{content:"✓";position:absolute;top:6px;right:8px;background:var(--navy2);color:#fff;border-radius:50%;width:20px;height:20px;font-size:.75rem;line-height:20px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{border:1.5px solid var(--gold);background:#fffaf0;color:var(--navy);border-radius:20px;padding:5px 11px;font-size:.8rem;cursor:pointer;font-weight:600}
+.chip:hover{background:var(--gold);color:#fff}
+.words{font-size:.82rem;color:var(--navy2);font-weight:600;margin-top:3px}
+.inl{display:flex;gap:8px;align-items:center;font-weight:500;font-size:.88rem;margin:10px 0}
+.inl input{width:18px;height:18px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+button.b{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;background:var(--navy);color:#fff;font-size:.88rem}
+button.b.alt{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+button.b.gold{background:var(--gold);color:#201600}
+.banner{border-radius:14px;padding:16px;display:flex;gap:14px;align-items:flex-start;border:2px solid}
+.banner .ic{font-size:2rem;line-height:1}
+.banner h3{margin:0 0 4px;font-size:1.05rem}
+.banner.ok{background:var(--greenbg);border-color:var(--green);color:#0d4f25}
+.banner.review{background:var(--amberbg);border-color:var(--amber);color:#6b4000}
+.banner.out{background:var(--redbg);border-color:var(--red);color:#7a1612}
+.banner.idle{background:#eef2fb;border-color:var(--navy2);color:var(--navy)}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.kv{grid-template-columns:1fr}}
+.kv div{background:#f7f9fd;border-radius:10px;padding:9px 11px;border:1px solid var(--line)}
+.kv small{display:block;color:var(--mute);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.kv b{font-size:1rem}
+.big{font-size:1.5rem!important;color:var(--navy)}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700}
+.pill.green{background:var(--greenbg);color:var(--green)}.pill.amber{background:var(--amberbg);color:var(--amber)}
+ul.l{margin:8px 0;padding-left:20px}ul.l li{margin:4px 0}
+.note{font-size:.82rem;color:var(--mute)}
+.f-red{color:var(--red)}.f-amber{color:var(--amber)}.f-green{color:var(--green)}
+table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}th{background:#eef2fb}
+textarea{width:100%;min-height:150px;border:1.5px solid var(--line);border-radius:10px;padding:10px;font-family:inherit;font-size:.85rem}
+details summary{cursor:pointer;font-weight:700;color:var(--navy);margin:6px 0}
+footer{max-width:1150px;margin:10px auto 30px;padding:0 14px;font-size:.78rem;color:var(--mute);text-align:center}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:20px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
+#toast.show{opacity:1}
+
+.hero{border-radius:20px;padding:22px 16px;text-align:center;border:3px solid;box-shadow:0 8px 24px rgba(11,31,68,.12);margin-bottom:16px}
+.hero.ok{background:linear-gradient(160deg,#e7f6ec,#fff);border-color:var(--green)}
+.hero.out{background:linear-gradient(160deg,#fdeceb,#fff);border-color:var(--red)}
+.hero.review{background:linear-gradient(160deg,#fff3dc,#fff);border-color:var(--amber)}
+.hero.idle{background:linear-gradient(160deg,#eef2fb,#fff);border-color:var(--navy2)}
+.hero .circle{width:84px;height:84px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:3rem;color:#fff;font-weight:700}
+.hero.ok .circle{background:var(--green)}.hero.out .circle{background:var(--red)}.hero.review .circle{background:var(--amber)}.hero.idle .circle{background:var(--navy2)}
+.hero h3{margin:0;font-size:clamp(1.25rem,4.5vw,1.8rem)}
+.hero.ok h3{color:var(--green)}.hero.out h3{color:var(--red)}.hero.review h3{color:var(--amber)}.hero.idle h3{color:var(--navy)}
+.hero p{margin:6px 0 0;color:var(--mute);font-size:.88rem}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;text-align:center}
+@media(max-width:560px){.tiles{grid-template-columns:1fr}}
+.tile{background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 8px}
+.tile small{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);font-weight:700}
+.tile .v{font-size:1.5rem;font-weight:800;color:var(--navy);margin:4px 0}
+.tile .s{font-size:.78rem;color:var(--mute)}
+.tile.green{border-color:var(--green);background:var(--greenbg)}.tile.green .v{color:var(--green)}
+.tile.amber{border-color:var(--amber);background:var(--amberbg)}.tile.amber .v{color:var(--amber);font-size:1.15rem}
+.tile .tc{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:6px}
+.tile .tc span{background:#fff;border:1px solid var(--amber);color:var(--amber);border-radius:12px;padding:2px 8px;font-size:.74rem;font-weight:700}
+.needs{margin-top:16px;text-align:left;background:var(--redbg);border:2px solid var(--red);border-radius:14px;padding:12px 16px;color:#7a1612}
+.needs.amberbox{background:var(--amberbg);border-color:var(--amber);color:#6b4000}
+.needs h4{margin:0 0 6px;font-size:1rem}
+.needs ul{margin:0;padding-left:20px}.needs li{margin:5px 0;font-weight:600}
+.togglebar{text-align:center;margin:4px 0 16px}
+@media print{.noprint,#toast{display:none!important}main{display:block}.card{box-shadow:none;break-inside:avoid}body{background:#fff}}
+</style>
+</head>
+<body>
+<header>
+  <h1>LIFE INSURANCE SOLUTION DESK</h1>
+  <div class="sub">Assess. Calculate. Protect.</div>
+  <div class="tag">Customer Eligibility • Maximum Sum Assured • Medical Requirements • Plan Suitability</div>
+</header>
+
+<main>
+<section class="noprint" aria-label="Customer input">
+  <div class="card">
+    <h2>Customer details</h2>
+    <label for="name">Customer name (optional)</label>
+    <input type="text" id="name" autocomplete="off">
+
+    <label for="dob">Date of birth</label>
+    <input type="date" id="dob">
+    <div class="err" id="dobErr"></div>
+    <div class="hint" id="ageCalc"></div>
+
+    <label for="ageManual">…or enter age directly (if DOB not available)</label>
+    <input type="number" id="ageManual" min="0" max="120" inputmode="numeric" placeholder="Age in completed years">
+    <div class="err" id="ageErr"></div>
+    <div class="hint" id="ageSource"></div>
+
+    <label>Occupational profile</label>
+    <div class="cards2" role="radiogroup">
+      <div class="occ active" data-occ="Salaried / Employed" tabindex="0" role="radio" aria-checked="true">
+        <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>Salaried / Employed</div>
+      <div class="occ" data-occ="Business Owner / Self-Employed" tabindex="0" role="radio" aria-checked="false">
+        <svg viewBox="0 0 24 24"><path d="M3 21V9l6-4v6l6-4v6l6-4v12z"/><path d="M8 21v-4h3v4"/></svg>Business Owner / Self-Employed</div>
+    </div>
+
+    <label for="earned">Income type</label>
+    <select id="earned">
+      <option value="earned">Earned income (salary / business income)</option>
+      <option value="non">Non-earned (retired, farmer, rental income, housewife, student)</option>
+    </select>
+
+    <label for="edu">Education</label>
+    <select id="edu">
+      <option value="grad">Graduate and above</option>
+      <option value="nongrad">Below graduate</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <h2>Income &amp; cover</h2>
+    <label for="income" id="incomeLbl">Annual salary income (₹)</label>
+    <input type="text" id="income" inputmode="numeric" placeholder="e.g. 12,00,000">
+    <div class="words" id="incomeW"></div><div class="err" id="incomeErr"></div>
+    <div class="chips" data-target="income">
+      <span class="chip" data-v="500000">₹5 L</span><span class="chip" data-v="1000000">₹10 L</span><span class="chip" data-v="2500000">₹25 L</span><span class="chip" data-v="5000000">₹50 L</span>
+    </div>
+    <div class="hint">The reference does not state gross or net; only earned income counts. Standard income proof is required.</div>
+
+    <label for="sa">How much life insurance cover does the customer require? (₹)</label>
+    <input type="text" id="sa" inputmode="numeric" placeholder="e.g. 1,00,00,000">
+    <div class="words" id="saW"></div><div class="err" id="saErr"></div>
+    <div class="chips" data-target="sa">
+      <span class="chip" data-v="2500000">₹25 lakh</span><span class="chip" data-v="5000000">₹50 lakh</span><span class="chip" data-v="10000000">₹1 crore</span><span class="chip" data-v="20000000">₹2 crore</span>
+    </div>
+    <div class="hint">Shortcuts only fill the box; limits are always applied by the rules.</div>
+  </div>
+
+  <div class="card">
+    <h2>Existing cover &amp; other</h2>
+    <label for="existing">Existing / simultaneously applied cover — all insurers, any duration (₹)</label>
+    <input type="text" id="existing" inputmode="numeric" placeholder="0">
+    <div class="hint">Financial Sum at Risk (FSAR). Deducted from the income-based limit.</div>
+    <label for="ifl2">IndiaFirst Life policies issued in last 2 years, any status (₹)</label>
+    <input type="text" id="ifl2" inputmode="numeric" placeholder="0">
+    <div class="hint">Medical Sum at Risk (MSAR) = requested cover + this amount.</div>
+    <label class="inl"><input type="checkbox" id="smoker"> Smoker declared in Proposal Form</label>
+
+    <label for="plan">Plan</label>
+    <select id="plan"><option>IndiaFirst Life Plan (Life Plan)</option></select>
+
+    <label for="budget">Annual premium the customer can afford (₹, optional)</label>
+    <input type="text" id="budget" inputmode="numeric">
+    <div class="hint">Premium rates are not in the supplied reference, so this is not used in any calculation.</div>
+  </div>
+  <div class="btns" style="margin-bottom:16px"><button class="b alt" id="resetBtn">Reset</button></div>
+</section>
+
+<section aria-live="polite" id="results"></section>
+</main>
+
+<footer>Prepared for insurance eligibility assessment. All results are indicative and subject to official product terms, underwriting guidelines, and insurer approval.</footer>
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   RULES DATA — transcribed from the three supplied photographs.
+   Update values here; the engines read only from this object.
+   ===================================================================== */
+const RULES = {
+  sources:{
+    uw:"Photo 3 — “Life Plan Underwriting Considerations” (page 1 of 4)",
+    notes:"Photo 2 — underwriting notes & FSAR / MSAR definitions (page 1 of 4)",
+    med:"Photo 1 — “India First Life Plan” medical grid by Medical Sum at Risk and age at entry"
+  },
+  planName:"IndiaFirst Life Plan (Life Plan)",
+  minAge:18,
+  minIncome:{salaried:500000, selfEmployed:500000},
+  minSumAssured:100000,
+  // Financial multiples: income x multiple (same table for salaried and self-employed)
+  multiples:[
+    {min:18,max:35,m:25},{min:36,max:45,m:20},{min:46,max:50,m:15},
+    {min:51,max:55,m:10},{min:56,max:60,m:8},{min:61,max:65,m:5}
+  ],
+  incomeProof:["3 months’ salary slips with Bank statement","3 years ITR with COI","3 years Form 16 or Form 26AS","3 years Audited Financials"],
+  ageProof:"Only Standard", pinCode:"Can be sourced from all Pin codes and Locations",
+  generalNotes:[
+    "Premium paid from self-account only. (If paid through Proprietorship / Partnership firm, partnership deed and NOC, Certificate of Establishment are required.)",
+    "LA-proposer concept not allowed (except Keyman, Employer-Employee and Partnership insurance — with mandatory standard financials of the Entity).",
+    "Non-earned income lives (retired lives, agriculturists/farmers, rental income, housewives, students) are not allowed. Only earned income is considered for financial eligibility."
+  ],
+  // Medical grid columns = age bands below
+  ageBandsMed:[{min:18,max:35,label:"18–35"},{min:36,max:45,label:"36–45"},{min:46,max:55,label:"46–55"},{min:56,max:999,label:"56 & above"}],
+  // codes: NIL, TME, T3/T5/T6 (tier), suffix U = + UCT
+  medRows:[
+    {to:1000000, label:"Up to ₹10 lakh",             c:["NIL","NIL","NIL","T3"]},
+    {to:4000000, label:"₹10,00,001 – ₹40,00,000",    c:["NIL","NIL","T5U","T6U"]},
+    {to:4900000, label:"₹40,00,001 – ₹49,00,000",    c:["NIL","TME","T6U","T6U"]},
+    {to:5000000, label:"₹49,00,001 – ₹50,00,000",    c:["TME","TME","T6U","T6U"]},
+    {to:7500000, label:"₹50,00,001 – ₹75,00,000",    c:["TME","T5U","T6U","T6U"]},
+    {to:12500000,label:"₹75,00,001 – ₹1,25,00,000",  c:["T5U","T5U","T6U","T6U"]},
+    {to:15000000,label:"₹1,25,00,001 – ₹1,50,00,000",c:["T5U","T6U","T6U","T6U"]},
+    {to:20000000,label:"₹1,50,00,001 – ₹2,00,00,000",c:["T6U","T6U","T6U","T6U"]},
+    {to:Infinity,label:"Above ₹2,00,00,000",         c:["T6U","T6U","T6U","T6U"]}
+  ],
+  tiers:{
+    T1:["MER","RUA"], T2:["MER","RUA","FBS","Lipids"], T3:["MER","RUA","FBS","Lipids","ECG"],
+    T4:["MER","RUA","FBS","Lipids","ECG","HIV"], T5:["MER","RUA","SMA 12","ECG"],
+    T6:["MER","RUA","SMA 12","TMT"], T7:["MER","RUA","SMA 12","TMT","2D Echo","USG Abdomen","Anti HCV"]
+  },
+  uctNote:"UCT is not required for smoker lives (when already declared in Proposal Form).",
+  msarNote:"Medical Sum at Risk includes all sum at risk of all policies issued in the last 2 years.",
+  openItems:[
+    "Maximum entry age for the Life Plan is not shown (multiples go up to age 65). Ages above 65 are flagged for confirmation.",
+    "Age definition (age last birthday / nearest birthday) is not specified. Completed years is used and flagged.",
+    "“TME” and the abbreviations MER, RUA, FBS, SMA 12, TMT, UCT are printed without expansion; the content of TME is not in the supplied reference — confirmation required.",
+    "“Non-Medical Limit: Nil” is printed in the Life Plan table; how it relates to the medical grid (where ‘Nil’ means no tests) needs confirmation. The grid is applied as printed.",
+    "How existing cover (FSAR) is netted against the income-based limit is not spelled out; it is deducted here — confirmation required.",
+    "Premium rates / formula, maximum sum assured cap, plan variants and rider rules (the “Riders” section is cut off) are not in the supplied photographs. Pages 2–4 of the underwriting document were not supplied.",
+    "Whether income is gross or net is not stated. Minimum income is ₹5,00,000 for both salaried and self-employed."
+  ]
+};
+
+/* ===================== UTILITIES ===================== */
+const $ = id => document.getElementById(id);
+const fmt = n => "₹" + Math.round(n).toLocaleString("en-IN");
+function words(n){
+  if(!isFinite(n)||n<=0) return "";
+  if(n>=1e7) return (+(n/1e7).toFixed(2))+" crore";
+  if(n>=1e5) return (+(n/1e5).toFixed(2))+" lakh";
+  return n.toLocaleString("en-IN");
+}
+function parseAmt(s){ const t=String(s||"").replace(/[₹,\s]/g,""); if(t==="")return null; if(!/^\d+(\.\d+)?$/.test(t))return NaN; return Number(t); }
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ===================== AGE ENGINE ===================== */
+function calcAgeFromDob(dobStr, now=new Date()){
+  const d=new Date(dobStr+"T00:00:00"); if(isNaN(d)) return null;
+  const t=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(d>t) return {future:true};
+  let y=t.getFullYear()-d.getFullYear(), m=t.getMonth()-d.getMonth(), dd=t.getDate()-d.getDate();
+  if(dd<0){ m--; dd+=new Date(t.getFullYear(),t.getMonth(),0).getDate(); }
+  if(m<0){ y--; m+=12; }
+  return {y,m,d:dd};
+}
+
+/* ===================== ELIGIBILITY ENGINE ===================== */
+function multipleForAge(age){ return RULES.multiples.find(b=>age>=b.min&&age<=b.max)||null; }
+
+function eligibilityEngine(i){
+  const r={status:"idle",reasons:[],flags:[],multiple:null,incomeCap:null,available:null,alt:null,diff:null};
+  if(i.age==null){ r.reasons.push("Enter date of birth or age."); return r; }
+  if(i.age<RULES.minAge){ r.status="out"; r.reasons.push(`Age ${i.age} is below the minimum age of ${RULES.minAge} in the supplied grids.`); return r; }
+  if(i.earned==="non"){ r.status="out"; r.reasons.push("Non-earned income lives (retired, agriculturists/farmers, rental income, housewives, students) are not allowed."); return r; }
+  if(i.edu==="nongrad"){ r.status="out"; r.reasons.push("Education criterion: Graduates and above only."); return r; }
+  const band=multipleForAge(i.age);
+  if(!band){ r.status="review"; r.reasons.push(`No financial multiple is documented for age ${i.age} (table ends at 65). Eligibility calculation incomplete — confirmation required.`); return r; }
+  r.multiple=band;
+  if(i.income==null){ r.reasons.push("Enter annual income."); return r; }
+  const minInc=i.occ.startsWith("Salaried")?RULES.minIncome.salaried:RULES.minIncome.selfEmployed;
+  if(i.income<minInc){ r.status="out"; r.reasons.push(`Annual income ${fmt(i.income)} is below the minimum income criterion of ${fmt(minInc)}.`); return r; }
+  r.incomeCap=i.income*band.m;                                   // income x multiple
+  r.available=Math.max(0, r.incomeCap-(i.existing||0));          // less existing cover (FSAR)
+  if(i.sa==null){ r.reasons.push("Enter the required sum assured."); return r; }
+  r.diff=r.available-i.sa;
+  if(i.sa<RULES.minSumAssured){ r.status="out"; r.reasons.push(`Requested cover is below the minimum sum assured of ${fmt(RULES.minSumAssured)}.`); return r; }
+  if(i.sa>r.available){
+    r.status="out";
+    r.reasons.push(`Requested ${fmt(i.sa)} exceeds the supported limit of ${fmt(r.available)} (income ${fmt(i.income)} × ${band.m}${i.existing?` − existing cover ${fmt(i.existing)}`:""}).`);
+    if(r.available>=RULES.minSumAssured) r.alt=r.available;
+    return r;
+  }
+  r.status="ok";
+  r.reasons.push(`Requested cover is within the income-based limit (${fmt(i.income)} × ${band.m} = ${fmt(r.incomeCap)}${i.existing?`, less existing cover ${fmt(i.existing)}`:""}).`);
+  r.flags.push("Age taken as completed years — the age definition is not specified in the reference.");
+  return r;
+}
+
+/* ===================== MEDICAL ENGINE ===================== */
+function medicalEngine(i, sa){
+  if(i.age==null||sa==null||i.age<RULES.minAge) return null;
+  const msar=sa+(i.ifl2||0);
+  const col=RULES.ageBandsMed.findIndex(b=>i.age>=b.min&&i.age<=b.max);
+  const row=RULES.medRows.find(x=>msar<=x.to);
+  const code=row.c[col], band=RULES.ageBandsMed[col].label;
+  const out={msar,row:row.label,band,code,status:"green",tests:[],notes:[],title:""};
+  if(code==="NIL"){ out.title="No additional medical examination indicated by the grid"; out.notes.push("Subject to all other underwriting conditions."); return out; }
+  out.status="amber";
+  if(code==="TME"){
+    out.title="TME required"; out.tests.push({name:"TME",cond:"Mandatory",note:"Test content not defined in the supplied reference — medical requirements require verification."}); return out;
+  }
+  const tier=code.slice(0,2), uct=code.endsWith("U");
+  out.title=`${tier.replace("T","TIER ")}${uct?" + UCT":""} required`;
+  RULES.tiers[tier].forEach(t=>out.tests.push({name:t,cond:"Mandatory",note:""}));
+  if(uct){
+    if(i.smoker) out.notes.push("UCT waived: smoker declared in Proposal Form.");
+    else out.tests.push({name:"UCT",cond:"Mandatory (not required if smoker declared)",note:RULES.uctNote});
+  }
+  return out;
+}
+
+/* ===================== PREMIUM ENGINE ===================== */
+// No official rates supplied, so nothing is calculated.
+function premiumEngine(){ return {available:false,msg:"Premium rates / formula are not available in the supplied reference — confirmation required. No premium or premium-based cover is calculated."}; }
+
+/* ===================== INPUT COLLECTION ===================== */
+let occ="Salaried / Employed";
+function collect(){
+  const dob=$("dob").value, mRaw=$("ageManual").value;
+  let age=null, src="", dobAge=null; const errs={};
+  if(dob){
+    const a=calcAgeFromDob(dob);
+    if(!a) errs.dob="Invalid date.";
+    else if(a.future) errs.dob="Date of birth cannot be in the future.";
+    else if(a.y>120) errs.dob="Unreasonable age — please check the date.";
+    else dobAge=a;
+  }
+  let manual=null;
+  if(mRaw!==""){ const v=Number(mRaw); if(!Number.isInteger(v)||v<0||v>120) errs.age="Enter a whole age between 0 and 120."; else manual=v; }
+  if(dobAge){ age=dobAge.y; src="dob"; } else if(manual!=null){ age=manual; src="manual"; }
+  const mismatch = !!dobAge&&manual!=null&&dobAge.y!==manual;
+  const inc=parseAmt($("income").value), sa=parseAmt($("sa").value), ex=parseAmt($("existing").value), ifl=parseAmt($("ifl2").value), bud=parseAmt($("budget").value);
+  if(Number.isNaN(inc)) errs.income="Enter a valid amount."; else if(inc===0) errs.income="Income must be greater than zero.";
+  if(Number.isNaN(sa)) errs.sa="Enter a valid amount."; else if(sa===0) errs.sa="Sum assured must be greater than zero.";
+  return {errs,dobAge,manual,age,src,mismatch,
+    income:(inc>0)?inc:null, sa:(sa>0)?sa:null,
+    existing:Number.isFinite(ex)?ex:0, ifl2:Number.isFinite(ifl)?ifl:0, budget:Number.isFinite(bud)&&bud>0?bud:null,
+    occ, earned:$("earned").value, edu:$("edu").value, smoker:$("smoker").checked, name:$("name").value.trim(), dob};
+}
+
+/* ===================== RENDERING ===================== */
+
+/* Plain-language "what is required" list shown in red when cover cannot be offered */
+function needsList(i,el){
+  const n=[];
+  if(el.status==="idle") return n;
+  if(i.age!=null&&i.age<RULES.minAge) n.push(`Customer must be at least ${RULES.minAge} years old.`);
+  if(i.earned==="non") n.push("Only earned income (salary / business income) is accepted. Retired, farmer, rental-income, housewife and student lives are not allowed.");
+  if(i.edu==="nongrad") n.push("Customer must be a Graduate or above.");
+  if(el.status==="review"&&!el.multiple) n.push(`No income multiple is documented for age ${i.age}. Please confirm with Underwriting before proceeding.`);
+  const minInc=RULES.minIncome.salaried;
+  if(i.income!=null&&el.multiple&&i.income<minInc) n.push(`Annual income must be at least ${fmt(minInc)} (customer has ${fmt(i.income)}).`);
+  if(i.sa!=null&&i.sa<RULES.minSumAssured&&el.multiple) n.push(`Minimum sum assured is ${fmt(RULES.minSumAssured)}.`);
+  if(el.status==="out"&&el.available!=null&&i.sa>el.available){
+    n.push(`Cover asked (${fmt(i.sa)}) is more than the allowed ${fmt(el.available)}. Either reduce the cover${el.alt?` to ${fmt(el.alt)} or less`:""}, or show higher proof of income of at least ${fmt(Math.ceil((i.sa+(i.existing||0))/el.multiple.m))} a year.`);
+    if(i.existing) n.push(`Existing cover of ${fmt(i.existing)} with all insurers has been counted against the limit.`);
+  }
+  if(el.status==="out"||el.status==="review") n.push("Income proof needed: "+RULES.incomeProof.join(" / ")+".");
+  return n;
+}
+function heroHtml(i,el,med,cls,ready){
+  const V={ok:["YES — this cover can be offered","Indicative result. Final approval is subject to full underwriting."],
+    out:["NO — this cover cannot be offered","See the red box below for what is required."],
+    review:["CHECK — confirmation needed","Some rule is missing or unclear. See the box below."],
+    idle:["Enter the customer details","Fill in age, income and cover needed to see the result."]}[cls];
+  const ic={ok:"✔",out:"✕",review:"!",idle:"?"}[cls];
+  let medTile;
+  if(!med) medTile=`<div class="tile"><small>Medical</small><div class="v">—</div><div class="s">Enter age &amp; cover</div></div>`;
+  else if(med.code==="NIL") medTile=`<div class="tile green"><small>Medical</small><div class="v">NIL</div><div class="s">No medical test required (as per grid)</div></div>`;
+  else{
+    const names=med.tests.map(t=>t.name);
+    medTile=`<div class="tile amber"><small>Medical</small><div class="v">REQUIRED</div><div class="s">${esc(med.title)}</div><div class="tc">${names.map(x=>`<span>${esc(x)}</span>`).join("")}</div>${med.code==="TME"?'<div class="s" style="margin-top:6px">Test list for TME not in reference</div>':""}${med.notes.length?`<div class="s" style="margin-top:6px">${esc(med.notes[0])}</div>`:""}</div>`;
+  }
+  const needs=needsList(i,el);
+  const box=needs.length?`<div class="needs ${cls==="review"?"amberbox":""}"><h4>${cls==="review"?"⚠ Please confirm":"✕ What is required / why not possible"}</h4><ul>${needs.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:"";
+  const alt=(cls==="out"&&el.alt)?`<div class="needs" style="background:var(--greenbg);border-color:var(--green);color:#0d4f25"><h4>✔ What we CAN offer</h4><ul><li>Up to ${fmt(el.alt)} cover${medAltText||""}</li></ul></div>`:"";
+  return `<div class="hero ${cls}"><div class="circle">${ic}</div><h3>${V[0]}</h3><p>${V[1]}</p>
+    <div class="tiles">
+      <div class="tile"><small>Cover asked</small><div class="v">${i.sa?fmt(i.sa):"—"}</div><div class="s">${i.sa?words(i.sa):""}</div></div>
+      <div class="tile ${cls==="ok"?"green":""}"><small>Maximum allowed</small><div class="v">${el.available!=null?fmt(el.available):"—"}</div><div class="s">${el.multiple?`${fmt(i.income||0)} × ${el.multiple.m}${i.existing?" − existing cover":""}`:""}</div></div>
+      ${medTile}
+    </div>${box}${alt}</div>`;
+}
+let lastSummary="", lastWA="", showDetails=false, medAltText="";
+function med2html(m){
+  if(!m) return "";
+  return `<p><span class="pill ${m.status}">${m.status==="green"?"GREEN":"AMBER"}</span> <b>${esc(m.title)}</b></p>
+    <div class="kv"><div><small>Medical Sum at Risk</small><b>${fmt(m.msar)}</b></div><div><small>Grid cell</small><b>${esc(m.row)} · age ${esc(m.band)}</b></div></div>
+    ${m.tests.length?`<table style="margin-top:10px"><tr><th>Test</th><th>Condition</th><th>Instruction</th></tr>${m.tests.map(t=>`<tr><td><b>${esc(t.name)}</b></td><td>${esc(t.cond)}</td><td>${esc(t.note)}</td></tr>`).join("")}</table>`:""}
+    ${m.notes.length?`<ul class="l">${m.notes.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>`:""}`;
+}
+
+function render(){
+  const i=collect();
+  $("dobErr").textContent=i.errs.dob||""; $("ageErr").textContent=i.errs.age||"";
+  $("incomeErr").textContent=i.errs.income||""; $("saErr").textContent=i.errs.sa||"";
+  $("incomeW").textContent=i.income?words(i.income):""; $("saW").textContent=i.sa?words(i.sa):"";
+  $("incomeLbl").textContent=i.occ.startsWith("Salaried")?"Annual salary income (₹)":"Annual business income (₹)";
+  $("ageCalc").textContent=i.dobAge?`Calculated age: ${i.dobAge.y} years, ${i.dobAge.m} months, ${i.dobAge.d} days`:"";
+  $("ageSource").textContent=i.age==null?"":(i.src==="dob"?"Age source: calculated from date of birth.":"Age source: entered manually.")+(i.mismatch?` ⚠ Mismatch: DOB gives ${i.dobAge.y}, manual entry is ${i.manual}. DOB-based age is used.`:"");
+  $("ageSource").className="hint"+(i.mismatch?" f-amber":"");
+
+  const el=eligibilityEngine(i);
+  const med=medicalEngine(i,i.sa);
+  const medAlt=(el.status==="out"&&el.alt)?medicalEngine(i,el.alt):null;
+  const prem=premiumEngine();
+  const ready=i.age!=null&&i.income!=null&&i.sa!=null;
+
+  let cls=el.status, title, text;
+  if(el.status==="ok"){ title="✓ WITHIN INDICATIVE ELIGIBILITY LIMIT"; text="The entered sum assured is within the limits established by the supplied eligibility grid. Final acceptance remains subject to complete underwriting."; }
+  else if(el.status==="review"){ title="⚠ REVIEW REQUIRED"; text="Eligibility calculation incomplete — confirmation required. "+el.reasons.join(" "); }
+  else if(el.status==="out"){ title="✕ OUTSIDE DOCUMENTED LIMIT"; text=el.reasons.join(" "); }
+  else { cls="idle"; title="Enter customer details"; text=el.reasons[0]||"Fill in age, income and required cover to see the assessment."; }
+  const icon={ok:"✔",review:"⚠",out:"✕",idle:"ℹ"}[cls];
+
+  medAltText=medAlt?(medAlt.code==="NIL"?" (no medical required)":` (medical: ${medAlt.title})`):"";
+  let h=heroHtml(i,el,med,cls,ready);
+  let d="";
+  d+=`<div class="card"><h2>Customer profile</h2><div class="kv">
+    <div><small>Name</small><b>${esc(i.name||"—")}</b></div>
+    <div><small>Date of birth</small><b>${i.dobAge?esc(new Date(i.dob+"T00:00:00").toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})):"—"}</b></div>
+    <div><small>Age (${i.src==="dob"?"from DOB":i.src==="manual"?"manual":"—"})</small><b>${i.age!=null?i.age+" years":"—"}</b></div>
+    <div><small>Occupation</small><b>${esc(i.occ)}</b></div>
+    <div><small>Annual income</small><b>${i.income?fmt(i.income):"—"}</b></div>
+    <div><small>Requested cover</small><b>${i.sa?fmt(i.sa):"—"}</b></div>
+    <div><small>Plan</small><b>${esc(RULES.planName)}</b></div>
+    <div><small>Premium budget</small><b>${i.budget?fmt(i.budget):"—"}</b></div></div></div>`;
+
+  d+=`<div class="card"><h2>Eligibility summary</h2><div class="kv">
+    <div><small>Income multiplier (age band)</small><b>${el.multiple?`${el.multiple.m}× (age ${el.multiple.min}–${el.multiple.max})`:"—"}</b></div>
+    <div><small>Income-based maximum</small><b>${el.incomeCap!=null?fmt(el.incomeCap):"—"}</b></div>
+    <div><small>Less existing cover (FSAR)</small><b>${fmt(i.existing)}</b></div>
+    <div><small>Max potentially eligible cover</small><b class="big">${el.available!=null?fmt(el.available):"—"}</b></div>
+    <div><small>Requested cover</small><b>${i.sa?fmt(i.sa):"—"}</b></div>
+    <div><small>${el.diff!=null&&el.diff<0?"Excess over limit":"Headroom"}</small><b class="${el.diff!=null&&el.diff<0?"f-red":"f-green"}">${el.diff!=null?fmt(Math.abs(el.diff)):"—"}</b></div></div>
+    <ul class="l">${el.reasons.map(r=>`<li>${esc(r)}</li>`).join("")}${el.flags.map(r=>`<li class="f-amber">${esc(r)}</li>`).join("")}</ul>
+    <p class="note">Source: ${esc(RULES.sources.uw)}. Existing cover per ${esc(RULES.sources.notes)}.</p></div>`;
+
+  d+=`<div class="card"><h2>Medical requirements &amp; underwriting</h2>${med?med2html(med):`<p class="note">Enter age and required cover to see the medical grid result.</p>`}
+    ${medAlt?`<hr style="border:0;border-top:1px solid var(--line)"><p><b>For the alternative cover of ${fmt(el.alt)}:</b></p>${med2html(medAlt)}`:""}
+    <p class="note">${esc(RULES.msarNote)} Source: ${esc(RULES.sources.med)}. Colours show workflow status only, not a medical judgement.</p></div>`;
+
+  d+=`<div class="card"><h2>Recommended solution</h2>`;
+  if(el.status==="ok") h+=`<p><b>${esc(RULES.planName)}</b> with sum assured <b>${fmt(i.sa)}</b> is supported by the supplied eligibility grid (indicative).</p>`;
+  else if(el.status==="out"&&el.alt) h+=`<p>Requested cover is not supported. Highest supported alternative: <b class="big">${fmt(el.alt)}</b> under <b>${esc(RULES.planName)}</b>.</p>`;
+  else if(el.status==="out") h+=`<p>No valid alternative can be shown from the documented rules.</p>`;
+  else h+=`<p class="note">Awaiting complete inputs or confirmation of missing rules.</p>`;
+  d+=`<p><b>Premium:</b> <span class="f-amber">${esc(prem.msg)}</span></p></div>`;
+
+  d+=`<div class="card"><h2>Conditions &amp; documents</h2><ul class="l">
+    <li>Age proof: ${esc(RULES.ageProof)}. Pin code: ${esc(RULES.pinCode)}.</li>
+    <li>Income proof (standard only): ${RULES.incomeProof.map(esc).join("; ")}.</li>
+    ${RULES.generalNotes.map(n=>`<li>${esc(n)}</li>`).join("")}</ul></div>`;
+
+  d+=`<div class="card"><h2>Rules reference &amp; open items</h2>
+    <details><summary>Source rules used</summary><ul class="l">
+      <li>Income multiples (Photo 3): ${RULES.multiples.map(b=>`${b.min}–${b.max}: ${b.m}×`).join(", ")}.</li>
+      <li>Minimum income ₹5,00,000 (salaried and self-employed); minimum sum assured ₹1,00,000; Non-Medical Limit printed as “Nil”.</li>
+      <li>Medical grid and tier definitions (Photo 1): ${Object.entries(RULES.tiers).map(([k,v])=>`${k.replace("T","TIER ")} = ${v.join(" + ")}`).join("; ")}.</li>
+      <li>FSAR / MSAR definitions and exclusions (Photo 2).</li></ul></details>
+    <details open><summary>Missing / unclear rules — confirmation required</summary><ul class="l">${RULES.openItems.map(o=>`<li>${esc(o)}</li>`).join("")}</ul></details></div>`;
+
+  // ---- shareable summaries
+  const L=["LIFE INSURANCE SOLUTION DESK — Indicative Summary"];
+  if(i.name) L.push("Customer: "+i.name);
+  L.push(`Age: ${i.age!=null?i.age:"—"} | Profile: ${i.occ} | Income: ${i.income?fmt(i.income):"—"}`);
+  L.push(`Requested cover: ${i.sa?fmt(i.sa):"—"} | Plan: ${RULES.planName}`);
+  if(el.multiple&&el.available!=null) L.push(`Multiple ${el.multiple.m}× → income limit ${fmt(el.incomeCap)}; max eligible ${fmt(el.available)}`);
+  L.push("Eligibility: "+(ready||el.status==="out"||el.status==="review"?title.replace(/^[✓⚠✕] /,""):"incomplete inputs"));
+  if(el.status==="out"&&el.alt) L.push("Highest supported alternative: "+fmt(el.alt));
+  if(med) L.push("Medical: "+med.title+(med.tests.length?" ("+med.tests.map(t=>t.name).join(", ")+")":"")+` [MSAR ${fmt(med.msar)}]`);
+  L.push("Premium: not calculated (rates not in reference)");
+  L.push("Indicative only; subject to official terms, underwriting and insurer approval.");
+  lastSummary=L.join("\n");
+  lastWA=L.map((x,k)=>k===0?"*"+x+"*":x).join("\n");
+
+  h+=`<div class="togglebar noprint"><button class="b alt" id="bToggle">${showDetails?"▲ Hide details":"▼ Show details (profile, rules, documents)"}</button></div><div id="details" style="display:${showDetails?"block":"none"}">${d}</div>`;
+  h+=`<div class="card noprint"><h2>Share</h2><div class="btns" style="margin-bottom:10px">
+    <button class="b" id="bCopy">Copy Summary</button><button class="b gold" id="bWA">Copy WhatsApp Summary</button><button class="b alt" id="bPrint">Print / Save as PDF</button></div>
+    <textarea id="waBox" readonly>${esc(lastWA)}</textarea></div>`;
+  $("results").innerHTML=h;
+  $("bToggle").onclick=()=>{showDetails=!showDetails;$("details").style.display=showDetails?"block":"none";$("bToggle").textContent=showDetails?"▲ Hide details":"▼ Show details (profile, rules, documents)"};
+  $("bCopy").onclick=()=>copy(lastSummary); $("bWA").onclick=()=>copy(lastWA); $("bPrint").onclick=()=>window.print();
+}
+
+/* ===================== HELPERS & EVENTS ===================== */
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
+function copy(txt){
+  const done=()=>toast("Copied to clipboard");
+  const fallback=()=>{const a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){toast("Copy failed — select text manually")}a.remove()};
+  if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(txt).then(done,fallback); else fallback();
+}
+function fmtField(el){ const v=parseAmt(el.value); if(v!=null&&!Number.isNaN(v)&&v>=0) el.value=Math.round(v).toLocaleString("en-IN"); }
+
+["dob","ageManual","name","earned","edu","smoker","plan"].forEach(id=>$(id).addEventListener("input",render));
+["income","sa","existing","ifl2","budget"].forEach(id=>{
+  const el=$(id); el.addEventListener("input",render); el.addEventListener("blur",()=>{fmtField(el);render()});
+});
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{ $(c.parentElement.dataset.target).value=Number(c.dataset.v).toLocaleString("en-IN"); render(); }));
+document.querySelectorAll(".occ").forEach(c=>{
+  const pick=()=>{document.querySelectorAll(".occ").forEach(x=>{x.classList.remove("active");x.setAttribute("aria-checked","false")});c.classList.add("active");c.setAttribute("aria-checked","true");occ=c.dataset.occ;render()};
+  c.addEventListener("click",pick); c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick()}});
+});
+$("resetBtn").addEventListener("click",()=>{
+  ["name","dob","ageManual","income","sa","existing","ifl2","budget"].forEach(id=>$(id).value="");
+  $("earned").value="earned";$("edu").value="grad";$("smoker").checked=false;
+  document.querySelectorAll(".occ")[0].click();
+});
+$("dob").max=new Date().toISOString().slice(0,10);
+render();
+</script>
+</body>
+</html>
